@@ -78,10 +78,11 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   TODO:
     * normalize -pi ... pi
   */
-  double phi = atan(py/px);
+  //double phi = atan(py/px);
+  double phi = atan2(py, px); // correction # 2
   //std::cout << "phi: " << phi << endl;
-  if (phi < -M_PI) phi = phi + M_PI;
-  if (phi >  M_PI) phi = phi - M_PI;
+  //if (phi < -M_PI) phi = phi + 2*M_PI; // correction # 3a
+  //if (phi >  M_PI) phi = phi - 2*M_PI; // correction # 3b
   //cout << "pi=" << M_PI << endl;
   
   double rhodot = (px*vx + py*vy)/rho;
@@ -89,6 +90,10 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   VectorXd z_pred(3);
   z_pred << rho, phi, rhodot;
   VectorXd y = z - z_pred;
+  
+  if (y(1) < -M_PI) y(1) = y(1) + 2*M_PI; // correction # 3a
+  if (y(1) >  M_PI) y(1) = y(1) - 2*M_PI; // correction # 3b
+  
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
   MatrixXd Si = S.inverse();
