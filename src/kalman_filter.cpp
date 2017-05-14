@@ -1,10 +1,8 @@
 #include <math.h>
 #include "kalman_filter.h"
-//#include "tools.h" // rbx
 
 using Eigen::MatrixXd;
 using Eigen::VectorXd;
-//using Tools::CalculateJacobian; // rbx
 
 KalmanFilter::KalmanFilter() {}
 
