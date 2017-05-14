@@ -65,6 +65,9 @@ int main(int argc, char* argv[]) {
   vector<GroundTruthPackage> gt_pack_list;
 
   string line;
+  
+  // rbx
+  //cout << "P1-term2-RBX, 13.5.2017" << endl;
 
   // prep the measurement packages (each line represents a measurement at a
   // timestamp)
@@ -123,10 +126,13 @@ int main(int argc, char* argv[]) {
     gt_package.gt_values_ << x_gt, y_gt, vx_gt, vy_gt;
     gt_pack_list.push_back(gt_package);
   }
+  
+  //cout << "rbx: main: all data read" << endl;
 
   // Create a Fusion EKF instance
   FusionEKF fusionEKF;
-
+  //cout << "rbx: main: FusionEKF created" << endl;
+  
   // used to compute the RMSE later
   vector<VectorXd> estimations;
   vector<VectorXd> ground_truth;
