@@ -1,7 +1,3 @@
-//#include <iostream>
-//using namespace std;
-
-//##### remove above ########################################################
 #include <math.h>
 #include "kalman_filter.h"
 //#include "tools.h" // rbx
@@ -59,41 +55,27 @@ void KalmanFilter::UpdateEKF(const VectorXd &z) {
   TODO:
     * update the state by using Extended Kalman Filter equations
   */
-  // F --> Fj
+  // set temoprary variables for following calulations
   double px = x_[0];
   double py = x_[1];
   double vx = x_[2];
   double vy = x_[3];
-  //MatrixXd Fj = CalculateJacobian(x_);
 
-  //x_ = F_ * x_;
-  //MatrixXd Ft = F_.transpose();
-  //P_ = F_ * P_ * Ft + Q_;
-
-  // H --> Hj
-  //MatrixXd Hj = CalculateJacobian(x_);
+  // calculate polar coordinates
   double rho = sqrt(px*px + py*py);
-  //void  KalmanFilter::UpdateEKF(const VectorXd &z) {
-  /**
-  TODO:
-    * normalize -pi ... pi
-  */
-  //double phi = atan(py/px);
   double phi = atan2(py, px); // correction # 2
-  //std::cout << "phi: " << phi << endl;
-  //if (phi < -M_PI) phi = phi + 2*M_PI; // correction # 3a
-  //if (phi >  M_PI) phi = phi - 2*M_PI; // correction # 3b
-  //cout << "pi=" << M_PI << endl;
-  
   double rhodot = (px*vx + py*vy)/rho;
   
+  // setup vectors for actual measurement and residuum
   VectorXd z_pred(3);
   z_pred << rho, phi, rhodot;
   VectorXd y = z - z_pred;
   
+  // perform normalization
   if (y(1) < -M_PI) y(1) = y(1) + 2*M_PI; // correction # 3a
   if (y(1) >  M_PI) y(1) = y(1) - 2*M_PI; // correction # 3b
-  
+ 
+  // perform calculation according to lecture
   MatrixXd Ht = H_.transpose();
   MatrixXd S = H_ * P_ * Ht + R_;
   MatrixXd Si = S.inverse();
