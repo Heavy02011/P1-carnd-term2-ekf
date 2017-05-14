@@ -128,6 +128,8 @@ void FusionEKF::ProcessMeasurement(const MeasurementPackage &measurement_pack) {
 
     // done initializing, no need to predict or update
     is_initialized_ = true;
+    previous_timestamp_ = measurement_pack.timestamp_; // correction # 1
+
     cout << "rbx: FusionEKF initialized" << endl;
     return;
   }
